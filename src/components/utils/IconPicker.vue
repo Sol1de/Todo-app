@@ -58,7 +58,7 @@ function selectIcon(icon: { name: string }) {
     <PopoverTrigger as-child>
       <Button variant="outline" size="icon" class="shrink-0">
         <component :is="selectedIcon?.component" v-if="selectedIcon" class="size-5" />
-        <component :is="icons.Grid2x2" v-else class="size-5" />
+        <component :is="icons.Folder" v-else class="size-5" />
       </Button>
     </PopoverTrigger>
 
