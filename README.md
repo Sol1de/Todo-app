@@ -154,7 +154,3 @@ State is automatically persisted to **localStorage** via `StorageService`. Store
 call `persist()` after every mutation. Storage keys are centralized in `src/config.ts`.
 
 No backend or database required — the app runs entirely in the browser.
-
-## License
-
-MIT
