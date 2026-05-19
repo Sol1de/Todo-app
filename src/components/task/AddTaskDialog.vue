@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import {ref} from 'vue'
+import {useTaskService} from '@/composables/useTaskService'
 import {
   Dialog,
   DialogContent,
@@ -22,9 +24,27 @@ defineProps<{
   open: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
+
+const title = ref('')
+const priority = ref<'high' | 'medium' | 'low'>('medium')
+const projectId = ref<string | null>(null)
+
+const {addTask} = useTaskService()
+
+function handleSubmit() {
+  addTask({
+    title: title.value,
+    priority: priority.value,
+    projectId: projectId.value ?? undefined,
+  })
+  emit('update:open', false)
+  title.value = ''
+  priority.value = 'medium'
+  projectId.value = null
+}
 </script>
 
 <template>
@@ -39,13 +59,13 @@ defineEmits<{
       <div class="flex flex-col gap-5 py-2">
         <div class="flex flex-col gap-2">
           <label class="text-sm font-medium">Task Name</label>
-          <Input placeholder="What needs to be done?"/>
+          <Input v-model="title" placeholder="What needs to be done?"/>
         </div>
 
         <div class="flex gap-2">
           <div class="flex flex-1 flex-col gap-2">
             <label class="text-sm font-medium">Priority</label>
-            <Select default-value="medium">
+            <Select v-model="priority">
               <SelectTrigger class="w-full">
                 <SelectValue placeholder="Select priority"/>
               </SelectTrigger>
@@ -59,7 +79,7 @@ defineEmits<{
 
           <div class="flex flex-1 flex-col gap-2">
             <label class="text-sm font-medium">Project</label>
-            <Select default-value="personal">
+            <Select v-model="projectId">
               <SelectTrigger class="w-full">
                 <SelectValue placeholder="Select project"/>
               </SelectTrigger>
@@ -78,7 +98,7 @@ defineEmits<{
         <DialogClose as-child>
           <Button variant="outline">Cancel</Button>
         </DialogClose>
-        <Button>Add Task</Button>
+        <Button @click="handleSubmit">Add Task</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

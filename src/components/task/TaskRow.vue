@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 defineProps<{
+  id: string
   title: string
   priority?: 'high' | 'medium' | 'low'
   completed?: boolean

@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import {Tabs, TabsList, TabsTrigger} from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useTaskService } from '@/composables/useTaskService'
+
+const { activeFilter, setFilter } = useTaskService()
 </script>
 
 <template>
-  <Tabs class="border-b pb-2" default-value="all">
+  <Tabs class="border-b pb-2" :model-value="activeFilter" @update:modelValue="setFilter($event as 'all' | 'active' | 'completed')">
     <TabsList>
       <TabsTrigger
           value="all"

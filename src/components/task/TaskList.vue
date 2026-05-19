@@ -1,24 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import TaskRow from './TaskRow.vue'
+import { useTaskService } from '@/composables/useTaskService'
 
-const tasks = ref([
-  { title: 'Buy coffee beans', priority: 'high' as const, completed: false },
-  { title: 'Finish presentation draft', priority: 'medium' as const, completed: false },
-  { title: 'Water plants', priority: 'low' as const, completed: false },
-  { title: 'Call doctor for appointment', priority: undefined, completed: true },
-])
+const { tasks, toggleTask } = useTaskService()
 </script>
 
 <template>
   <div class="flex flex-col gap-2">
     <TaskRow
-      v-for="(task, index) in tasks"
-      :key="index"
+      v-for="task in tasks"
+      :key="task.id"
+      :id="task.id"
       :title="task.title"
       :priority="task.priority"
       :completed="task.completed"
-      @toggle="task.completed = !task.completed"
+      @toggle="toggleTask(task.id)"
     />
   </div>
 </template>
