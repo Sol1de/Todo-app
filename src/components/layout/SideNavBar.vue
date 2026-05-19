@@ -1,13 +1,13 @@
-<script setup lang="ts">
-import {LayoutList, Calendar, AlertCircle, User, FolderClosed, Plus} from 'lucide-vue-next'
+<script setup lang="ts">import {LayoutList, Calendar, AlertCircle, FolderClosed, Plus} from 'lucide-vue-next'
 import {Button} from '@/components/ui/button'
 import NavItem from './NavItem.vue'
+import type {Project} from '@/models/Project'
 
 withDefaults(defineProps<{
-  hasProjects?: boolean
   activeProject?: string
+  projects?: Project[]
 }>(), {
-  hasProjects: true,
+  projects: () => [],
 })
 
 defineEmits<{
@@ -26,12 +26,21 @@ defineEmits<{
       <p class="mt-1 text-sm text-muted-foreground">Stay Focused</p>
     </div>
 
-    <nav v-if="hasProjects" class="flex-1">
-      <NavItem :icon="LayoutList" label="All Tasks" :count="24" :active="activeProject === 'All Tasks'" @select="$emit('select-project', 'All Tasks')"/>
-      <NavItem :icon="Calendar" label="Today" :count="5" :active="activeProject === 'Today'" @select="$emit('select-project', 'Today')"/>
-      <NavItem :icon="AlertCircle" label="Important" :count="3" :active="activeProject === 'Important'" @select="$emit('select-project', 'Important')"/>
-      <NavItem :icon="User" label="Personal" :count="12" :active="activeProject === 'Personal'" @select="$emit('select-project', 'Personal')"/>
-      <NavItem :icon="FolderClosed" label="Work" :count="8" :active="activeProject === 'Work'" @select="$emit('select-project', 'Work')"/>
+    <nav v-if="projects.length" class="flex-1">
+      <NavItem :icon="LayoutList" label="All Tasks" :active="activeProject === 'All Tasks'"
+               @select="$emit('select-project', 'All Tasks')"/>
+      <NavItem :icon="Calendar" label="Today" :active="activeProject === 'Today'"
+               @select="$emit('select-project', 'Today')"/>
+      <NavItem :icon="AlertCircle" label="Important" :active="activeProject === 'Important'"
+               @select="$emit('select-project', 'Important')"/>
+      <NavItem
+          v-for="project in projects"
+          :key="project.id"
+          :icon="FolderClosed"
+          :label="project.name"
+          :active="activeProject === project.name"
+          @select="$emit('select-project', project.name)"
+      />
     </nav>
     <div v-else class="flex-1"/>
 

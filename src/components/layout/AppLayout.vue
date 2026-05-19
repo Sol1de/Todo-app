@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import SideNavBar from './SideNavBar.vue'
+import type {Project} from '@/models/Project'
 
 withDefaults(defineProps<{
-  hasProjects?: boolean
   activeProject?: string
+  projects?: Project[]
 }>(), {
-  hasProjects: true,
+  projects: () => [],
 })
 
 defineEmits<{
@@ -16,7 +17,7 @@ defineEmits<{
 
 <template>
   <div class="flex h-screen">
-    <SideNavBar :has-projects="hasProjects" :active-project="activeProject" @new-project="$emit('new-project')" @select-project="$emit('select-project', $event)" />
+    <SideNavBar :active-project="activeProject" :projects="projects" @new-project="$emit('new-project')" @select-project="$emit('select-project', $event)" />
     <main class="flex flex-1 flex-col overflow-auto bg-background">
       <slot />
     </main>

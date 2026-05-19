@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 defineProps<{
   icon: Component
   label: string
-  count: number
+  count?: number
   active?: boolean
 }>()
 
@@ -27,6 +27,7 @@ defineEmits<{
     <component :is="icon" class="size-[18px] shrink-0" />
     <span class="flex-1 text-sm">{{ label }}</span>
     <Badge
+      v-if="count != null"
       :variant="active ? 'default' : 'secondary'"
       class="text-xs tabular-nums"
     >
