@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
-import type { Task } from '@/models/task'
-import { TaskFactory, type createTaskInput } from '@/factories/TaskFactory'
+import type { Task } from '@/types/task'
+import { TaskFactory, type createTaskInput } from '@/factories/task.factory'
 
 const tasks = ref<Task[]>([])
 const activeFilter = ref<'all' | 'active' | 'completed'>('all')

@@ -1,4 +1,4 @@
-import type { Task, Priority } from '@/models/task'
+import type { Task, Priority } from '@/types/task'
 
 export interface createTaskInput { 
     title: string
