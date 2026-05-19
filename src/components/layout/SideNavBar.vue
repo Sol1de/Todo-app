@@ -1,4 +1,4 @@
-<script setup lang="ts">import {LayoutList, Calendar, AlertCircle, FolderClosed, Plus} from 'lucide-vue-next'
+<script setup lang="ts">import {Plus} from 'lucide-vue-next'
 import {Button} from '@/components/ui/button'
 import NavItem from './NavItem.vue'
 import type {Project} from '@/models/Project'
@@ -27,16 +27,10 @@ defineEmits<{
     </div>
 
     <nav v-if="projects.length" class="flex-1">
-      <NavItem :icon="LayoutList" label="All Tasks" :active="activeProject === 'All Tasks'"
-               @select="$emit('select-project', 'All Tasks')"/>
-      <NavItem :icon="Calendar" label="Today" :active="activeProject === 'Today'"
-               @select="$emit('select-project', 'Today')"/>
-      <NavItem :icon="AlertCircle" label="Important" :active="activeProject === 'Important'"
-               @select="$emit('select-project', 'Important')"/>
       <NavItem
           v-for="project in projects"
           :key="project.id"
-          :icon="FolderClosed"
+          :icon="project.icon"
           :label="project.name"
           :active="activeProject === project.name"
           @select="$emit('select-project', project.name)"

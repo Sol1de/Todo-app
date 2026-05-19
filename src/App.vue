@@ -56,6 +56,6 @@ const activeProjectData = computed(() =>
     </ScrollArea>
 
     <AddTaskDialog v-model:open="addTaskOpen"/>
-    <CreateProjectDialog v-model:open="createProjectOpen"/>
+    <CreateProjectDialog v-model:open="createProjectOpen" @project-created="activeProject = $event"/>
   </AppLayout>
 </template>

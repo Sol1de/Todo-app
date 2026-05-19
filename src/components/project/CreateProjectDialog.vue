@@ -12,17 +12,44 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import IconPicker from '@/components/utils/IconPicker.vue'
+import { ProjectService } from '@/services/ProjectService'
 import { ref } from 'vue'
 
+const projectName = ref('')
+const projectDescription = ref('')
 const selectedIcon = ref<string>()
 
-defineProps<{
+const projectService = new ProjectService()
+
+const props = defineProps<{
   open: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
+  (e: 'project-created', name: string): void
 }>()
+
+function handleCreate() {
+  try {
+    const project = projectService.createProject({
+      name: projectName.value,
+      description: projectDescription.value || undefined,
+      icon: selectedIcon.value,
+    })
+    resetForm()
+    emit('update:open', false)
+    emit('project-created', project.name)
+  } catch {
+    // validation failed — name is empty
+  }
+}
+
+function resetForm() {
+  projectName.value = ''
+  projectDescription.value = ''
+  selectedIcon.value = undefined
+}
 </script>
 
 <template>
@@ -39,13 +66,13 @@ defineEmits<{
           <label class="text-sm font-medium">Project Name</label>
           <div class="flex gap-2">
             <IconPicker v-model="selectedIcon" />
-            <Input placeholder="e.g., Website Redesign" class="flex-1" />
+            <Input v-model="projectName" placeholder="e.g., Website Redesign" class="flex-1" />
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="text-sm font-medium">Description (Optional)</label>
-          <Textarea placeholder="Briefly describe the goal..." class="min-h-[100px]" />
+          <Textarea v-model="projectDescription" placeholder="Briefly describe the goal..." class="min-h-[100px]" />
         </div>
       </div>
 
@@ -55,7 +82,7 @@ defineEmits<{
         <DialogClose as-child>
           <Button variant="outline">Cancel</Button>
         </DialogClose>
-        <Button>Create Project</Button>
+        <Button @click="handleCreate">Create Project</Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

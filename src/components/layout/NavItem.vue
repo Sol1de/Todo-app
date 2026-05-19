@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import { Badge } from '@/components/ui/badge'
+import DynamicIcon from '@/components/utils/DynamicIcon.vue'
 
 defineProps<{
-  icon: Component
+  icon: string
   label: string
   count?: number
   active?: boolean
@@ -24,7 +24,7 @@ defineEmits<{
     ]"
     @click="$emit('select')"
   >
-    <component :is="icon" class="size-[18px] shrink-0" />
+    <DynamicIcon :name="icon" class="size-[18px] shrink-0" />
     <span class="flex-1 text-sm">{{ label }}</span>
     <Badge
       v-if="count != null"

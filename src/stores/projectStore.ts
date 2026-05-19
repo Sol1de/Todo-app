@@ -1,24 +1,31 @@
-import { reactive } from 'vue'
-import type { Project } from '@/models/Project'
+import {reactive} from 'vue'
+import type {Project} from '@/models/Project'
+import {storageService} from '@/services/StorageService'
+import appConfig from '@/config'
 
 const state = reactive<{
-  projects: Project[]
-  activeProjectId: string | null
+    projects: Project[]
+    activeProjectId: string | null
 }>({
-  projects: [],
-  activeProjectId: null,
+    projects: storageService.get<Project[]>(appConfig.PROJECTS_STORAGE_KEY) ?? [],
+    activeProjectId: null,
 })
 
+function persist(): void {
+    storageService.set(appConfig.PROJECTS_STORAGE_KEY, state.projects)
+}
+
 export function addProject(project: Project): void {
-  throw new Error('Not implemented')
+    state.projects.push(project)
+    persist()
 }
 
 export function getProjects(): Project[] {
-  throw new Error('Not implemented')
+    return state.projects
 }
 
 export function setActiveProject(projectId: string): void {
-  throw new Error('Not implemented')
+    state.activeProjectId = projectId
 }
 
-export { state as projectState }
+export {state as projectState}
