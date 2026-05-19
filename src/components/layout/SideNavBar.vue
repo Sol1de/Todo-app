@@ -26,7 +26,7 @@ defineEmits<{
       <p class="mt-1 text-sm text-muted-foreground">Stay Focused</p>
     </div>
 
-    <nav v-if="projects.length" class="flex-1">
+    <nav v-if="projects?.length" class="flex-1">
       <NavItem
           v-for="project in projects"
           :key="project.id"

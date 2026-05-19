@@ -7,21 +7,20 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
+import {Input} from '@/components/ui/input'
+import {Textarea} from '@/components/ui/textarea'
+import {Button} from '@/components/ui/button'
+import {Separator} from '@/components/ui/separator'
 import IconPicker from '@/components/utils/IconPicker.vue'
-import { ProjectService } from '@/services/ProjectService'
-import { ref } from 'vue'
+import projectService from '@/services/ProjectService'
+import {ref} from 'vue'
 
 const projectName = ref('')
 const projectDescription = ref('')
 const selectedIcon = ref<string>()
 
-const projectService = new ProjectService()
 
-const props = defineProps<{
+defineProps<{
   open: boolean
 }>()
 
@@ -40,8 +39,8 @@ function handleCreate() {
     resetForm()
     emit('update:open', false)
     emit('project-created', project.name)
-  } catch {
-    // validation failed — name is empty
+  } catch (err) {
+    console.error('error: ', err)
   }
 }
 
@@ -59,24 +58,24 @@ function resetForm() {
         <DialogTitle>Create New Project</DialogTitle>
       </DialogHeader>
 
-      <Separator />
+      <Separator/>
 
       <div class="flex flex-col gap-5 py-2">
         <div class="flex flex-col gap-2">
           <label class="text-sm font-medium">Project Name</label>
           <div class="flex gap-2">
-            <IconPicker v-model="selectedIcon" />
-            <Input v-model="projectName" placeholder="e.g., Website Redesign" class="flex-1" />
+            <IconPicker v-model="selectedIcon"/>
+            <Input v-model="projectName" placeholder="e.g., Website Redesign" class="flex-1"/>
           </div>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="text-sm font-medium">Description (Optional)</label>
-          <Textarea v-model="projectDescription" placeholder="Briefly describe the goal..." class="min-h-[100px]" />
+          <Textarea v-model="projectDescription" placeholder="Briefly describe the goal..." class="min-h-[100px]"/>
         </div>
       </div>
 
-      <Separator />
+      <Separator/>
 
       <DialogFooter>
         <DialogClose as-child>

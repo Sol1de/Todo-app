@@ -12,23 +12,27 @@ import TaskInput from '@/components/task/TaskInput.vue'
 import TaskList from '@/components/task/TaskList.vue'
 import AddTaskDialog from '@/components/dialogs/AddTaskDialog.vue'
 import {projectState} from '@/stores/projectStore'
-import {taskState} from '@/stores/taskStore'
+import {getTasksByProject} from '@/stores/taskStore'
 
 const activeProject = ref('')
 const addTaskOpen = ref(false)
 const createProjectOpen = ref(false)
 
 const projects = computed(() => projectState.projects)
-const tasks = computed(() => taskState.tasks)
 const hasProjects = computed(() => projects.value.length > 0)
-const completionRate = computed(() => {
-  if (!tasks.value.length) return 0
-  return Math.round((tasks.value.filter(t => t.completed).length / tasks.value.length) * 100)
-})
 
 const activeProjectData = computed(() =>
     projects.value.find(p => p.name === activeProject.value)
 )
+
+const tasks = computed(() =>
+    activeProjectData.value ? getTasksByProject(activeProjectData.value.id) : []
+)
+
+const completionRate = computed(() => {
+  if (!tasks.value.length) return 0
+  return Math.round((tasks.value.filter(t => t.completed).length / tasks.value.length) * 100)
+})
 </script>
 
 <template>

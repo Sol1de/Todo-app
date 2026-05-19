@@ -16,30 +16,33 @@ pnpm preview      # Preview production build locally
 
 No test runner or linter is configured. Type-checking is done via `vue-tsc -b` (part of build).
 
-## Infrastructure
-
-Redis is available via Docker Compose (`docker compose up -d`). Not yet wired into the app — intended for future persistence.
-
 ## Tech Stack
 
 - **Vue 3** with `<script setup>` SFCs and TypeScript
 - **Vite 8** with `@tailwindcss/vite` plugin (Tailwind CSS v4)
 - **shadcn-vue** (new-york style, Geist Sans font) — UI primitives in `src/components/ui/`, built on **reka-ui**
+- **@vueuse/core** for Vue composition utilities
 - **Lucide** icons via `lucide-vue-next`
 - `@` path alias resolves to `src/`
 
 ## Architecture
 
-4-layer architecture (detailed in ARCHITECTURE.md):
+4-layer architecture:
 
 1. **Models** (`src/models/`) — TypeScript interfaces only (`Project`, `Task` and their `Create*Input` counterparts)
-2. **Factories** (`src/factories/`) — Static `create()` methods that build entities from form input (add IDs, timestamps, defaults)
+2. **Factories** (`src/factories/`) — Static `create()` methods that build entities from form input (add IDs via `crypto.randomUUID()`, timestamps, defaults)
 3. **Stores** (`src/stores/`) — Vue `reactive()` singletons exporting state and mutation functions (not Pinia)
 4. **Services** (`src/services/`) — Orchestrate validation → factory → store; business rules live here
 
 **Data flow:** Component → `Service.create(input)` → `Service.validate()` → `Factory.create()` → `Store.add()` → reactive UI update.
 
-Most store/service/factory methods currently throw `"Not implemented"` — this is the skeleton awaiting implementation.
+### Persistence
+
+State is persisted to **localStorage** via `StorageService` (`src/services/StorageService.ts`). Stores load from localStorage on init and call `persist()` after every mutation. Storage keys are centralized in `src/config.ts`.
+
+### Active project selection
+
+`App.vue` tracks the active project by **name** (not ID). `activeProjectData` looks up the full `Project` by matching `p.name === activeProject`. This means project names are effectively unique identifiers in the UI layer.
 
 ## SOLID Principles
 
@@ -92,14 +95,16 @@ Use this decision table from the reference docs when considering new patterns:
 
 ## UI Structure
 
-- `App.vue` — root component, manages project/task dialog state
+- `App.vue` — root component, manages project/task dialog state and active project
 - `src/components/layout/` — shell: `AppLayout` (sidebar + main), `SideNavBar`, `TopAppBar`
-- `src/components/project/` — project CRUD UI (header, creation dialog, empty state, completion card)
-- `src/components/task/` — task CRUD UI (list, row, input, filters, add dialog)
+- `src/components/project/` — project display (header, empty state, completion card)
+- `src/components/task/` — task CRUD UI (list, row, input, filters)
+- `src/components/dialogs/` — modal dialogs (`CreateProjectDialog`, `AddTaskDialog`)
+- `src/components/utils/` — shared utilities (`DynamicIcon`, `IconPicker`)
 - `src/components/ui/` — shadcn-vue primitives (do not edit manually; regenerate via `npx shadcn-vue@latest`)
 
 ## Conventions
 
 - State is managed via module-level `reactive()` singletons, not Pinia or Vuex
-- ARCHITECTURE.md is written in French — keep it in French when updating
+- Services are instantiated per component (`new ProjectService()`), not shared singletons
 - The project uses `pnpm` (lockfile is `pnpm-lock.yaml`)

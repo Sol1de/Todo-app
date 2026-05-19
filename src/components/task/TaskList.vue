@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import TaskRow from './TaskRow.vue'
 import type {Task} from '@/models/Task'
+import {toggleTask} from '@/stores/taskStore'
 
 defineProps<{
   tasks: Task[]
@@ -15,6 +16,7 @@ defineProps<{
       :title="task.title"
       :priority="task.priority"
       :completed="task.completed"
+      @toggle="toggleTask(task.id)"
     />
   </div>
 </template>
