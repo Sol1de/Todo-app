@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select'
 import {Button} from '@/components/ui/button'
 import {Separator} from '@/components/ui/separator'
+import {projectState} from '@/stores/projectStore'
 
 defineProps<{
   open: boolean
@@ -59,13 +60,14 @@ defineEmits<{
 
           <div class="flex flex-1 flex-col gap-2">
             <label class="text-sm font-medium">Project</label>
-            <Select default-value="personal">
+            <Select>
               <SelectTrigger class="w-full">
                 <SelectValue placeholder="Select project"/>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="personal">Personal</SelectItem>
-                <SelectItem value="work">Work</SelectItem>
+                <SelectItem v-for="project in projectState.projects" :key="project.id" :value="project.id">
+                  {{ project.name }}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
