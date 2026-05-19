@@ -1,6 +1,8 @@
 # Todo App
 
-A project and task manager built with **Vue 3**, **TypeScript**, and **Tailwind CSS v4**. Designed as a learning resource to demonstrate **SOLID principles**, **design patterns** (Factory, Singleton), and a clean **4-layer architecture** in a real Vue application.
+A project and task manager built with **Vue 3**, **TypeScript**, and **Tailwind CSS v4**. Designed as a learning
+resource to demonstrate **SOLID principles**, **design patterns** (Factory, Singleton), and a clean **4-layer
+architecture** in a real Vue application.
 
 ## Features
 
@@ -12,15 +14,15 @@ A project and task manager built with **Vue 3**, **TypeScript**, and **Tailwind 
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Vue 3 (`<script setup>` + Composition API) |
-| Language | TypeScript (strict mode) |
-| Build | Vite 8 |
-| Styling | Tailwind CSS v4 via `@tailwindcss/vite` |
-| UI Components | shadcn-vue (new-york style) + reka-ui |
-| Icons | Lucide (lucide-vue-next) |
-| Utilities | @vueuse/core, clsx, tailwind-merge |
+| Layer         | Technology                                 |
+|---------------|--------------------------------------------|
+| Framework     | Vue 3 (`<script setup>` + Composition API) |
+| Language      | TypeScript (strict mode)                   |
+| Build         | Vite 8                                     |
+| Styling       | Tailwind CSS v4 via `@tailwindcss/vite`    |
+| UI Components | shadcn-vue (new-york style) + reka-ui      |
+| Icons         | Lucide (lucide-vue-next)                   |
+| Utilities     | @vueuse/core, clsx, tailwind-merge         |
 
 ## Getting Started
 
@@ -33,7 +35,7 @@ A project and task manager built with **Vue 3**, **TypeScript**, and **Tailwind 
 
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone git@github.com:Sol1de/Todo-app.git
 cd todo-app
 
 # Install dependencies
@@ -70,22 +72,24 @@ Factory (object construction)
 Store (reactive state + persistence)
 ```
 
-**Data flow:** `Component` → `Service.create(input)` → `validate()` → `Factory.create()` → `Store.add()` → reactive UI update.
+**Data flow:** `Component` → `Service.create(input)` → `validate()` → `Factory.create()` → `Store.add()` → reactive UI
+update.
 
 ### Layers
 
-| Layer | Location | Responsibility |
-|-------|----------|---------------|
-| **Models** | `src/models/` | TypeScript interfaces — define the shape of `Project` and `Task` |
+| Layer         | Location         | Responsibility                                                                |
+|---------------|------------------|-------------------------------------------------------------------------------|
+| **Models**    | `src/models/`    | TypeScript interfaces — define the shape of `Project` and `Task`              |
 | **Factories** | `src/factories/` | Static `create()` methods — build entities with IDs, timestamps, and defaults |
-| **Stores** | `src/stores/` | Vue `reactive()` singletons — hold state and expose mutation functions |
-| **Services** | `src/services/` | Orchestrate validation → factory → store; all business rules live here |
+| **Stores**    | `src/stores/`    | Vue `reactive()` singletons — hold state and expose mutation functions        |
+| **Services**  | `src/services/`  | Orchestrate validation → factory → store; all business rules live here        |
 
 ### Design Patterns
 
 #### Factory Pattern (`src/factories/`)
 
-Centralizes object creation. Each factory exposes a static `create(input)` method that transforms form data into a complete entity (with UUID, timestamps, defaults). If the data structure changes, only the factory needs updating.
+Centralizes object creation. Each factory exposes a static `create(input)` method that transforms form data into a
+complete entity (with UUID, timestamps, defaults). If the data structure changes, only the factory needs updating.
 
 ```
 CreateProjectInput  ──▶  ProjectFactory.create()  ──▶  Project (with id, createdAt, defaults)
@@ -93,17 +97,18 @@ CreateProjectInput  ──▶  ProjectFactory.create()  ──▶  Project (with
 
 #### Singleton Pattern (`src/stores/`)
 
-Stores are module-level `reactive()` objects. Since ES modules are loaded once, this is a natural singleton — every component reading from the same store sees the same data. No class-based `getInstance()` needed.
+Stores are module-level `reactive()` objects. Since ES modules are loaded once, this is a natural singleton — every
+component reading from the same store sees the same data. No class-based `getInstance()` needed.
 
 ### SOLID Principles
 
-| Principle | How it's applied |
-|-----------|-----------------|
-| **Single Responsibility** | Each layer has exactly one job: models define shape, factories build, stores manage state, services own business rules |
-| **Open/Closed** | New entity types are added via new factories and services, without modifying existing ones |
-| **Liskov Substitution** | Any implementation of an interface (e.g. `Task`) is substitutable without breaking callers |
+| Principle                 | How it's applied                                                                                                        |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| **Single Responsibility** | Each layer has exactly one job: models define shape, factories build, stores manage state, services own business rules  |
+| **Open/Closed**           | New entity types are added via new factories and services, without modifying existing ones                              |
+| **Liskov Substitution**   | Any implementation of an interface (e.g. `Task`) is substitutable without breaking callers                              |
 | **Interface Segregation** | `CreateProjectInput` and `CreateTaskInput` are separate from `Project`/`Task` — consumers depend only on what they need |
-| **Dependency Inversion** | Services depend on model interfaces, not concrete implementations. Components receive data through props/emits |
+| **Dependency Inversion**  | Services depend on model interfaces, not concrete implementations. Components receive data through props/emits          |
 
 ## Project Structure
 
@@ -145,7 +150,8 @@ src/
 
 ## Persistence
 
-State is automatically persisted to **localStorage** via `StorageService`. Stores load saved data on initialization and call `persist()` after every mutation. Storage keys are centralized in `src/config.ts`.
+State is automatically persisted to **localStorage** via `StorageService`. Stores load saved data on initialization and
+call `persist()` after every mutation. Storage keys are centralized in `src/config.ts`.
 
 No backend or database required — the app runs entirely in the browser.
 
